@@ -16,13 +16,13 @@ yes_tumor_path = os.path.join(image_directory, 'yes')
 
 #  Check if the folders exist
 if not os.path.exists(no_tumor_path) or not os.path.exists(yes_tumor_path):
-    print("❌ ERROR: One or both image folders not found.")
+    print(" ERROR: One or both image folders not found.")
     print("Expected folders:")
     print("  -", no_tumor_path)
     print("  -", yes_tumor_path)
     exit()
 
-# ✅ Load file names
+#  Load file names
 no_tumor_images = os.listdir(no_tumor_path)
 yes_tumor_images = os.listdir(yes_tumor_path)
 
@@ -30,7 +30,7 @@ dataset = []
 label = []
 INPUT_SIZE = 64
 
-# ✅ Load images from 'no' folder
+#  Load images from 'no' folder
 for image_name in no_tumor_images:
     if image_name.lower().endswith(('.jpg', '.png')):
         image_path = os.path.join(no_tumor_path, image_name)
@@ -40,7 +40,7 @@ for image_name in no_tumor_images:
             dataset.append(np.array(img))
             label.append(0)
 
-# ✅ Load images from 'yes' folder
+# Load images from 'yes' folder
 for image_name in yes_tumor_images:
     if image_name.lower().endswith(('.jpg', '.png')):
         image_path = os.path.join(yes_tumor_path, image_name)
@@ -50,14 +50,14 @@ for image_name in yes_tumor_images:
             dataset.append(np.array(img))
             label.append(1)
 
-# ✅ Check if data was loaded
+#  Check if data was loaded
 if len(dataset) == 0:
-    print("❌ ERROR: No images loaded. Please check your dataset paths.")
+    print(" ERROR: No images loaded. Please check your dataset paths.")
     exit()
 else:
-    print(f"✅ Loaded {len(dataset)} images successfully.")
+    print(f" Loaded {len(dataset)} images successfully.")
 
-# ✅ Convert and preprocess data
+#  Convert and preprocess data
 dataset = np.array(dataset)
 label = np.array(label)
 
@@ -65,7 +65,7 @@ x_train, x_test, y_train, y_test = train_test_split(dataset, label, test_size=0.
 x_train = normalize(x_train, axis=1)
 x_test = normalize(x_test, axis=1)
 
-# ✅ Build CNN model
+# Build CNN model
 model = Sequential()
 
 model.add(Conv2D(32, (3, 3), input_shape=(INPUT_SIZE, INPUT_SIZE, 3)))
@@ -91,7 +91,7 @@ model.compile(loss='binary_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
-# ✅ Train the model
+# Train the model
 model.fit(x_train, y_train,
           batch_size=16,
           verbose=1,
@@ -99,9 +99,9 @@ model.fit(x_train, y_train,
           validation_data=(x_test, y_test),
           shuffle=False)
 
-# ✅ Save the trained model
+#  Save the trained model
 model.save('BrainTumor10Epochs.h5')
-print("✅ Model training complete and saved as BrainTumor10Epochs.h5")
+print(" Model training complete and saved as BrainTumor10Epochs.h5")
 
 import matplotlib.pyplot as plt
 
